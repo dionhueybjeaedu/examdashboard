@@ -5,7 +5,9 @@ import streamlit as st
 def normalize_score(value):
     if pd.isna(value):
         return None
-    return round(value * 100) if 0 < value < 1 else round(value)
+    if isinstance(value, (int, float)) and 0 < value <= 1:
+        return round(value * 100)
+    return round(value)
 
 # File uploader
 uploaded_file = st.file_uploader("Upload your AP Exam Excel Sheet", type=["xlsx"])
