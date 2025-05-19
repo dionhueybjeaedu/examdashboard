@@ -45,18 +45,22 @@ if uploaded_file:
         incorrect_mc = []
         weak_topics = set()
 
-        for idx, col in enumerate(range(13, 73)):
-            answer = row[col]
-            if pd.notna(answer):
-                topic = mc_topics[idx]
-                weak_topics.add(topic)
-                incorrect_mc.append({
-                    "Q": question_numbers[idx],
-                    "Topic": topic,
-                    "Skill": mc_skills[idx],
-                    "Answer": answer,
-                    "Correct": correct_answers[idx]
-                })
+       for idx, col in enumerate(range(13, 73)):
+    answer = row[col]
+    question_number = question_numbers[idx]
+    correct_answer = correct_answers[idx]
+    topic = mc_topics[idx]
+    skill = mc_skills[idx]
+
+    if pd.notna(answer) and answer != correct_answer:
+        weak_topics.add(topic)
+        incorrect_mc.append({
+            "Q": question_number,
+            "Topic": topic,
+            "Skill": skill,
+            "Answer": answer,
+            "Correct": correct_answer
+        })
 
         summary_data.append({
             "ID": student_id,
