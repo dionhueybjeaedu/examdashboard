@@ -44,6 +44,7 @@ if uploaded_file:
         frq1 = normalize_score(row[8])
         frq2 = normalize_score(row[9])
         frq3 = normalize_score(row[10])
+        predicted_ap = row[11]  # Column L
 
         incorrect_mc = []
         weak_topics = set()
@@ -73,6 +74,7 @@ if uploaded_file:
             "FRQ1": frq1,
             "FRQ2": frq2,
             "FRQ3": frq3,
+            "Predicted AP Score": predicted_ap,
             "Incorrect Count": len(incorrect_mc),
             "Weak Topics": ", ".join(str(t) for t in weak_topics if pd.notna(t)),
             "Incorrect Details": incorrect_mc,
