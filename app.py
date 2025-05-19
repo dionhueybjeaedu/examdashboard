@@ -1,17 +1,19 @@
-
-# Interactive Dashboard for AP Exam Data Analysis
-
 import pandas as pd
-import plotly.express as px
 import streamlit as st
 
-# Load the Excel file
+# Helper function to normalize scores (percentages or whole numbers)
+def normalize_score(value):
+    if pd.isna(value):
+        return None
+    return round(value * 100) if 0 < value < 1 else round(value)
+
+# File uploader
 uploaded_file = st.file_uploader("Upload your AP Exam Excel Sheet", type=["xlsx"])
 
 if uploaded_file:
     df_raw = pd.read_excel(uploaded_file, header=None)
 
-    # Extract key metadata and student data
+    # Extract metadata and student data
     student_rows = df_raw.iloc[14:54]
     question_numbers = df_raw.iloc[13, 13:73].tolist()
     correct_answers = df_raw.iloc[12, 13:73].tolist()
@@ -20,22 +22,20 @@ if uploaded_file:
     frq_topics = df_raw.iloc[9, 73:76].tolist()
     frq_skills = df_raw.iloc[10, 73:76].tolist()
 
-    # Preprocess student data
+    # Process each student row
     summary_data = []
-    def normalize_score(value):
-    if pd.isna(value):
-        return None
-    return round(value * 100) if 0 < value < 1 else round(value)
     for _, row in student_rows.iterrows():
         student_id = row[2]
         first_name = row[3]
         last_name = row[4]
         english_name = row[5]
+
         mc_score = normalize_score(row[6])
         frq_total = normalize_score(row[7])
         frq1 = normalize_score(row[8])
         frq2 = normalize_score(row[9])
         frq3 = normalize_score(row[10])
+
         incorrect_mc = []
         weak_topics = set()
 
@@ -65,12 +65,12 @@ if uploaded_file:
             "Incorrect Details": incorrect_mc,
         })
 
-    # Display Summary Table
+    # Display dashboard
     st.title("Student Performance Dashboard")
     df_summary = pd.DataFrame(summary_data)
     st.dataframe(df_summary[["ID", "Name", "MC Score", "FRQ Total", "Incorrect Count", "Weak Topics"]])
 
-    # Individual Student View
+    # Individual student view
     selected_student = st.selectbox("Select a student to view details", df_summary["Name"])
     student_info = next(s for s in summary_data if s["Name"] == selected_student)
 
@@ -79,7 +79,7 @@ if uploaded_file:
     st.write(f"**FRQ Total:** {student_info['FRQ Total']} (FRQ1: {student_info['FRQ1']}, FRQ2: {student_info['FRQ2']}, FRQ3: {student_info['FRQ3']})")
     st.write("**Weak Topics:**", student_info['Weak Topics'])
 
-    # Incorrect Question Details
+    # Incorrect details
     st.subheader("Incorrect MC Questions")
     st.dataframe(pd.DataFrame(student_info["Incorrect Details"]))
 
