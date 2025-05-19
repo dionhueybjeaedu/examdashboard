@@ -30,6 +30,7 @@ if uploaded_file:
     mc_skills = df_raw.iloc[10, 13:73].tolist()
     frq_topics = df_raw.iloc[9, 73:76].tolist()
     frq_skills = df_raw.iloc[10, 73:76].tolist()
+    st.write("DEBUG: Total MCQs pulled =", len(question_numbers))
 
     # Process each student row
     summary_data = []
