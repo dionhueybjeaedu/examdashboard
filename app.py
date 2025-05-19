@@ -23,7 +23,7 @@ if uploaded_file:
     student_rows = df_raw.iloc[14:54]
     question_numbers = [
         f"Q{idx+1}" if pd.isna(q) or str(q).strip() == "" else str(q)
-        for idx, q in enumerate(df_raw.iloc[13, 13:73])
+        for idx, q in enumerate(df_raw.iloc[11, 13:73])
     ]
     correct_answers = df_raw.iloc[12, 13:73].tolist()
     mc_topics = df_raw.iloc[9, 13:73].tolist()
