@@ -50,13 +50,11 @@ if uploaded_file:
         incorrect_mc = []
         weak_topics = set()
 
-for idx, col in enumerate(range(13, 73)):
-    question_number = question_numbers[idx]
-
-    # 🔒 Skip this column if there's no valid question number
+for idx, question_number in enumerate(question_numbers):
     if pd.isna(question_number) or str(question_number).strip() == "":
-        continue
+        continue  # skip blank question numbers
 
+    col = 13 + idx
     answer = row[col]
     correct_answer = correct_answers[idx]
     topic = mc_topics[idx]
