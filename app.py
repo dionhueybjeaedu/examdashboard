@@ -54,7 +54,7 @@ for idx, question_number in enumerate(question_numbers):
     if pd.isna(question_number) or str(question_number).strip() == "":
         continue  # skip blank question numbers
 
-    col = 13 + idx
+    col = 13 + idx # match to the column index
     answer = row[col]
     correct_answer = correct_answers[idx]
     topic = mc_topics[idx]
