@@ -73,7 +73,7 @@ if uploaded_file:
 
     # Display dashboard
     st.title("Student Performance Dashboard")
-    df_summary = pd.DataFrame(summary_data)
+    df_summary = pd.DataFrame(summary_data).reset_index(drop=True)
     st.dataframe(df_summary[["ID", "Name", "MC Score", "FRQ Total", "Incorrect Count", "Weak Topics"]])
 
     # Individual student view
