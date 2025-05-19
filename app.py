@@ -58,7 +58,7 @@ if uploaded_file:
             "FRQ2": frq2,
             "FRQ3": frq3,
             "Incorrect Count": len(incorrect_mc),
-            "Weak Topics": ", ".join(str(t) for t in weak_topics),
+            "Weak Topics": ", ".join(str(t) for t in weak_topics if pd.notna(t)),
             "Incorrect Details": incorrect_mc,
         })
 
