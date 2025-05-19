@@ -50,26 +50,28 @@ if uploaded_file:
         incorrect_mc = []
         weak_topics = set()
 
-for idx, question_number in enumerate(question_numbers):
-    if pd.isna(question_number) or str(question_number).strip() == "":
-        continue  # skip blank question numbers
+        # Loop through MC questions
+        for idx, question_number in enumerate(question_numbers):
+            if pd.isna(question_number) or str(question_number).strip() == "":
+                continue  # skip blank question numbers
 
-    col = 13 + idx # match to the column index
-    answer = row[col]
-    correct_answer = correct_answers[idx]
-    topic = mc_topics[idx]
-    skill = mc_skills[idx]
+            col = 13 + idx  # match to the column index
+            answer = row[col]
+            correct_answer = correct_answers[idx]
+            topic = mc_topics[idx]
+            skill = mc_skills[idx]
 
-    if pd.notna(answer) and answer != correct_answer:
-        weak_topics.add(topic)
-        incorrect_mc.append({
-            "Q": question_number,
-            "Topic": topic,
-            "Skill": skill,
-            "Answer": answer,
-            "Correct": correct_answer
-        })
+            if pd.notna(answer) and answer != correct_answer:
+                weak_topics.add(topic)
+                incorrect_mc.append({
+                    "Q": question_number,
+                    "Topic": topic,
+                    "Skill": skill,
+                    "Answer": answer,
+                    "Correct": correct_answer
+                })
 
+        # Add student summary (once per student)
         summary_data.append({
             "ID": student_id,
             "Name": " ".join(str(x) for x in [first_name, last_name] if pd.notna(x)),
