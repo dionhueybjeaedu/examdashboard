@@ -3,11 +3,15 @@ import streamlit as st
 
 # Helper function to normalize scores (percentages or whole numbers)
 def normalize_score(value):
-    if pd.isna(value):
+    try:
+        if pd.isna(value):
+            return None
+        value = float(value)
+        if 0 < value <= 1:
+            return round(value * 100)
+        return round(value)
+    except:
         return None
-    if isinstance(value, (int, float)) and 0 < value <= 1:
-        return round(value * 100)
-    return round(value)
 
 # File uploader
 uploaded_file = st.file_uploader("Upload your AP Exam Excel Sheet", type=["xlsx"])
