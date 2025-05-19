@@ -22,17 +22,20 @@ if uploaded_file:
 
     # Preprocess student data
     summary_data = []
+    def normalize_score(value):
+    if pd.isna(value):
+        return None
+    return round(value * 100) if 0 < value < 1 else round(value)
     for _, row in student_rows.iterrows():
         student_id = row[2]
         first_name = row[3]
         last_name = row[4]
         english_name = row[5]
-        mc_score = row[6]
-        frq_total = row[7]
-        frq1 = row[8]
-        frq2 = row[9]
-        frq3 = row[10]
-
+        mc_score = normalize_score(row[6])
+        frq_total = normalize_score(row[7])
+        frq1 = normalize_score(row[8])
+        frq2 = normalize_score(row[9])
+        frq3 = normalize_score(row[10])
         incorrect_mc = []
         weak_topics = set()
 
