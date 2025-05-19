@@ -1,0 +1,85 @@
+# Interactive Dashboard for AP Exam Data Analysis
+
+import pandas as pd
+import plotly.express as px
+import streamlit as st
+
+# Load the Excel file
+uploaded_file = st.file_uploader("Upload your AP Exam Excel Sheet", type=["xlsx"])
+
+if uploaded_file:
+    df_raw = pd.read_excel(uploaded_file, header=None)
+
+    # Extract key metadata and student data
+    student_rows = df_raw.iloc[14:54]
+    question_numbers = df_raw.iloc[13, 13:73].tolist()
+    correct_answers = df_raw.iloc[12, 13:73].tolist()
+    mc_topics = df_raw.iloc[9, 13:73].tolist()
+    mc_skills = df_raw.iloc[10, 13:73].tolist()
+    frq_topics = df_raw.iloc[9, 73:76].tolist()
+    frq_skills = df_raw.iloc[10, 73:76].tolist()
+
+    # Preprocess student data
+    summary_data = []
+    for _, row in student_rows.iterrows():
+        student_id = row[2]
+        first_name = row[3]
+        last_name = row[4]
+        english_name = row[5]
+        mc_score = row[6]
+        frq_total = row[7]
+        frq1 = row[8]
+        frq2 = row[9]
+        frq3 = row[10]
+
+        incorrect_mc = []
+        weak_topics = set()
+
+        for idx, col in enumerate(range(13, 73)):
+            answer = row[col]
+            if pd.notna(answer):
+                topic = mc_topics[idx]
+                weak_topics.add(topic)
+                incorrect_mc.append({
+                    "Q": question_numbers[idx],
+                    "Topic": topic,
+                    "Skill": mc_skills[idx],
+                    "Answer": answer,
+                    "Correct": correct_answers[idx]
+                })
+
+        summary_data.append({
+            "ID": student_id,
+            "Name": f"{english_name} {first_name} {last_name}",
+            "MC Score": mc_score,
+            "FRQ Total": frq_total,
+            "FRQ1": frq1,
+            "FRQ2": frq2,
+            "FRQ3": frq3,
+            "Incorrect Count": len(incorrect_mc),
+            "Weak Topics": ", ".join(weak_topics),
+            "Incorrect Details": incorrect_mc,
+        })
+
+    # Display Summary Table
+    st.title("Student Performance Dashboard")
+    df_summary = pd.DataFrame(summary_data)
+    st.dataframe(df_summary[["ID", "Name", "MC Score", "FRQ Total", "Incorrect Count", "Weak Topics"]])
+
+    # Individual Student View
+    selected_student = st.selectbox("Select a student to view details", df_summary["Name"])
+    student_info = next(s for s in summary_data if s["Name"] == selected_student)
+
+    st.subheader("Individual Performance")
+    st.write(f"**MC Score:** {student_info['MC Score']}")
+    st.write(f"**FRQ Total:** {student_info['FRQ Total']} (FRQ1: {student_info['FRQ1']}, FRQ2: {student_info['FRQ2']}, FRQ3: {student_info['FRQ3']})")
+    st.write("**Weak Topics:**", student_info['Weak Topics'])
+
+    # Incorrect Question Details
+    st.subheader("Incorrect MC Questions")
+    st.dataframe(pd.DataFrame(student_info["Incorrect Details"]))
+
+    # Recommendations
+    st.subheader("AI Recommendations")
+    for topic in student_info['Weak Topics'].split(", "):
+        st.markdown(f"- Review **{topic}**. Consider redoing practice questions and revisiting core concepts.")
