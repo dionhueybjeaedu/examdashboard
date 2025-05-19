@@ -60,7 +60,7 @@ if uploaded_file:
 
         summary_data.append({
             "ID": student_id,
-            "Name": " ".join(str(x) for x in [english_name, first_name, last_name] if pd.notna(x)),
+            "Name": " ".join(str(x) for x in [first_name, last_name] if pd.notna(x)),
             "MC Score": mc_score,
             "FRQ Total": frq_total,
             "FRQ1": frq1,
