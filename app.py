@@ -31,10 +31,10 @@ if uploaded_file:
     # Process each student row
     summary_data = []
     for _, row in student_rows.iterrows():
-        student_id = row[2]
-        first_name = row[3]
-        last_name = row[4]
-        english_name = row[5]
+        student_id = row[1]
+        first_name = row[2]
+        last_name = row[3]
+        english_name = row[4]
 
         mc_score = normalize_score(row[6])
         frq_total = normalize_score(row[7])
