@@ -55,7 +55,7 @@ if uploaded_file:
             if pd.isna(question_number) or str(question_number).strip() == "":
                 continue  # skip blank question numbers
 
-            col = 13 + idx  # match to the column index
+            col = 13 + idx
             answer = row[col]
             correct_answer = correct_answers[idx]
             topic = mc_topics[idx]
@@ -71,7 +71,7 @@ if uploaded_file:
                     "Correct": correct_answer
                 })
 
-        # Add student summary (once per student)
+        # Add student summary
         summary_data.append({
             "ID": student_id,
             "Name": " ".join(str(x) for x in [first_name, last_name] if pd.notna(x)),
